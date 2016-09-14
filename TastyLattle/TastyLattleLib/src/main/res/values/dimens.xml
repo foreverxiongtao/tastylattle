@@ -1,0 +1,17 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="fragment_banner_item_height">300px</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_customer_item_padding">30px</dimen>
+    <dimen name="activity_customer_item_height">120px</dimen>
+    <dimen name="activity_confirm_pay_height">90px</dimen>
+    <dimen name="fragmet_item_height">110px</dimen>
+    <dimen name="activity_toolbar_height">100px</dimen>
+    <dimen name="activity_button_height">85px</dimen>
+    <dimen name="main_activity_button_height">80px</dimen>
+    <dimen name="main_activity_button_width">650px</dimen>
+    <dimen name="activity_button_width">700px</dimen>
+    <dimen name="activity_pay_success_width">300px</dimen>
+    <dimen name="activity_diliver_height">1px</dimen>
+</resources>
