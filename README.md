@@ -1,0 +1,2 @@
+# tastylattle
+基类activity和基类fragment的封装，构建单一activity+多fragment的模式
