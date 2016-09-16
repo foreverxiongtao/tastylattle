@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.desperado.customerlib.view.autolayout.AutoLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.desperado.customerlib.view.button.CarouseButton
+        android:id="@+id/btn_fragment_main_commit"
+        tl:normalSolid="@color/common_item_text_blue_normal"
+        tl:pressedSolid="@color/btn_blue_pressed"
+        tl:roundButtonRadius="10px"
+        android:layout_width="@dimen/activity_button_width"
+        android:layout_height="@dimen/activity_button_height"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20px"
+        android:layout_marginTop="50px"
+        android:gravity="center_horizontal"
+        android:text="确认支付"
+        android:textColor="@color/white"/>
+
+</com.desperado.customerlib.view.autolayout.AutoLinearLayout>

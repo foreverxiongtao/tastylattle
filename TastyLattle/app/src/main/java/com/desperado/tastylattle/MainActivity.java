@@ -12,6 +12,13 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            loadRootFragment(R.id.afl_main_container, MainFragment.newInstance());
+        }
+        initTitleBar();
+        initfindViewById();
+        setListener();
+        init();
     }
 
     @Override
@@ -21,7 +28,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initTitleBar() {
-
+        setTitleBarBg(R.color.common_title_blue);
+        setTitleLeftViewBg(R.color.common_title_blue);
+        setTitleColor(R.color.common_title_white);
+        setTitle("测试");
     }
 
     @Override
@@ -41,7 +51,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected Activity getActivity() {
-        return null;
+        return this;
     }
 
     @Override

@@ -1,11 +1,77 @@
 <resources>
 
+
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- AppCompatEditText默认状态状态设置底线颜色 -->
+        <!--<item name="colorControlNormal">@color/white</item>-->
+        <!--&lt;!&ndash; AppCompatEditText选择的底线颜色 &ndash;&gt;-->
+        <!--<item name="colorControlActivated">@color/main_project_bg</item>-->
+        <item name="android:textCursorDrawable">@null</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <!--<item name="colorControlNormal">@color/light_title_grey</item>-->
+        <!--<item name="colorControlActivated">@color/light_title_grey</item>-->
+        <!--<item name="colorControlHighlight">@color/light_title_grey</item>-->
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!-- Loding_dialog样式Start -->
+    <style name="Dialog_bocop">
+        <item name="android:windowBackground">@color/bocop_dialog_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
+
+
+
+
+    <style name="line_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5px</item>
+        <item name="android:background">@color/line_bg</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.AppBarOverlay"
+           parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
+    <!--CarouseButton-->
+    <declare-styleable name="customButton">
+        <attr name="normalSolid" format="color"/>
+        <attr name="pressedSolid" format="color"/>
+        <attr name="stroke" format="color"/>
+        <attr name="normalStroke" format="color"/>
+        <attr name="pressedStroke" format="color"/>
+        <attr name="roundButtonRadius" format="dimension"/>
+        <attr name="roundButtonLeftTopRadius" format="dimension"/>
+        <attr name="roundButtonLeftBottomRadius" format="dimension"/>
+        <attr name="roundButtonRightTopRadius" format="dimension"/>
+        <attr name="roundButtonRightBottomRadius" format="dimension"/>
+        <attr name="normalDrawable" format="reference"/>
+        <attr name="pressedDrawable" format="reference"/>
+        <attr name="isSelected" format="boolean"/>
+        <attr name="normalTextColor" format="color"/>
+        <attr name="selectedTextColor" format="color"/>
+        <attr name="strokWidth" format="dimension"/>
+    </declare-styleable>
+
+    <style name="MatchMatch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+
 
 </resources>
