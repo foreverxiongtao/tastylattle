@@ -2,7 +2,6 @@ package com.desperado.tastylattlelib.base;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +14,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.desperado.customerlib.view.autolayout.AutoRelativeLayout;
+import com.desperado.tastylattlelib.R;
+import com.desperado.tastylattlelib.utils.AbViewUtil;
+import com.jaeger.library.StatusBarUtil;
+
+import me.yokeyword.fragmentation.SupportActivity;
 
 
 /*
@@ -32,7 +36,7 @@ import com.desperado.customerlib.view.autolayout.AutoRelativeLayout;
  *
  * 修订日期 :
  */
-public class ToolBarActivity extends AppCompatActivity {
+public class ToolBarActivity extends SupportActivity {
     protected RelativeLayout rl_title_bar;
     private LinearLayout ll_title_bar_left_click;//标题左边点击View
     private ImageView iv_title_bar_left_icon;//标题左边图标

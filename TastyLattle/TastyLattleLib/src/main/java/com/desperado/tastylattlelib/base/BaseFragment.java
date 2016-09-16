@@ -2,7 +2,6 @@ package com.desperado.tastylattlelib.base;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,14 @@ import android.widget.TextView;
 
 import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.desperado.customerlib.view.autolayout.AutoRelativeLayout;
-import com.desperado.flashdonkeyclient.R;
-import com.desperado.flashdonkeyclient.listener.OnActivitySelectListenner;
-import com.desperado.flashdonkeyclient.mvp.presenter.base.BasePresenter;
+import com.desperado.tastylattlelib.R;
+import com.desperado.tastylattlelib.listener.OnActivitySelectListenner;
+import com.desperado.tastylattlelib.mvp.presenter.BasePresenter;
+
+import me.yokeyword.fragmentation.SupportFragment;
 
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends SupportFragment {
     /**
      * Fragment title
      */
@@ -107,15 +108,6 @@ public abstract class BaseFragment extends Fragment {
     public void showLoadingDialog(String title) {
         if (mListener != null)
             mListener.showLoginDialog(title);
-//        if (null != this && !this.isFinishing()) {
-//            if (!TextUtils.isEmpty(title)) {
-//                abLoadingDialog.setTitle(title);
-//            } else {
-//                abLoadingDialog.setTitle(getString(R.string.loding_dialog));
-//            }
-//            abLoadingDialog.show();
-//        }
-//        _loadingDialog.showWithStatus(title, SVProgressHUD.SVProgressHUDMaskType.None);
     }
 
     /**
@@ -130,31 +122,7 @@ public abstract class BaseFragment extends Fragment {
      * 初始化正在加载进度条
      */
     public void initLoadingDialog() {
-        //abLoadingDialog = new AbLoadingDialog(getActivity());
-        //abLoadingDialog.setCancelable(false);
-//        abLoadingDialog.setCancelable(true);
-//        abLoadingDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-//            public boolean onKey(DialogInterface dialog,
-//                                 int keyCode, KeyEvent event) {
-//                if (keyCode == KeyEvent.KEYCODE_BACK) {
-//                    dialog.dismiss();
-//                    //此处把dialog dismiss掉，然后把本身的activity finish掉
-//                    getActivity().finish();
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
-//        });
-//        _loadingDialog = new SVProgressHUD(getActivity());
-//        _loadingDialog.setOnDismissListener(new OnDismissListener() {
-//            @Override
-//            public void onDismiss(SVProgressHUD hud) {
-//                if (getCurrentPersenter() != null) {
-//                    getCurrentPersenter().unsubcrib();
-//                }
-//            }
-//        });
+
     }
 
     /**
@@ -165,7 +133,6 @@ public abstract class BaseFragment extends Fragment {
     public void showInfoMsg(String msg) {
         if (mListener != null)
             mListener.showInfoMessage(msg);
-//        _loadingDialog.showInfoWithStatus(msg, SVProgressHUD.SVProgressHUDMaskType.Gradient);
     }
 
     /**
@@ -176,7 +143,6 @@ public abstract class BaseFragment extends Fragment {
     public void showSuccessMsg(String msg) {
         if (mListener != null)
             mListener.showSuccessMessage(msg);
-//        _loadingDialog.showSuccessWithStatus(msg, SVProgressHUD.SVProgressHUDMaskType.Gradient);
     }
 
     /**
@@ -187,7 +153,6 @@ public abstract class BaseFragment extends Fragment {
     public void showErrMsg(String msg) {
         if (mListener != null)
             mListener.showErrorMessageg(msg);
-//        _loadingDialog.showErrorWithStatus(msg, SVProgressHUD.SVProgressHUDMaskType.Gradient);
     }
 
 
@@ -345,15 +310,6 @@ public abstract class BaseFragment extends Fragment {
             lazyLoad();
         }
         hasCancel = false; //重置标示位
-        /*MyApplication.getUIHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!hasCancel) {
-                    lazyLoad();
-                }
-                hasCancel = false; //重置标示位
-            }
-        }, 10);*/
     }
 
     protected void onInvisible() {

@@ -11,7 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.bigkoo.svprogresshud.SVProgressHUD;
-import com.desperado.tastylattlelib.R;
+import com.bigkoo.svprogresshud.listener.OnDismissListener;
+import com.desperado.tastylattlelib.listener.OnActivitySelectListenner;
+import com.desperado.tastylattlelib.listener.OnDialogDismissListener;
+import com.desperado.tastylattlelib.mvp.presenter.BasePresenter;
+import com.desperado.tastylattlelib.utils.AppManager;
+import com.jaeger.library.StatusBarUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,8 +50,10 @@ public abstract class BaseActivity extends ToolBarActivity implements OnActivity
     @Override
     public void setContentView(View _mUserView) {
         super.setContentView(_mUserView);
-        StatusBarUtil.setColor(this, getResources().getColor(R.color.common_title_blue), LocalConstant.ALL_TRANSPARENT_ALPHA);
+        StatusBarUtil.setColor(this, getResources().getColor(provideStatusColor()), 0);
     }
+
+    public abstract int provideStatusColor();
 
 
     @Override
@@ -78,32 +85,7 @@ public abstract class BaseActivity extends ToolBarActivity implements OnActivity
      * 初始化正在加载进度条
      */
     public void initLoadingDialog() {
-//
-//        abLoadingDialog = new AbLoadingDialog(this);
-//        abLoadingDialog.setCancelable(true);
-//        abLoadingDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-//            public boolean onKey(DialogInterface dialog,
-//                                 int keyCode, KeyEvent event) {
-//                if (keyCode == KeyEvent.KEYCODE_BACK) {
-//
-//                    dialog.dismiss();
-////                    //此处把dialog dismiss掉，然后把本身的activity finish掉
-//                    BaseActivity.this.finish();
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
-//        });
         _loadingDialog = new SVProgressHUD(this);
-//        _loadingDialog.setOnDismissListener(new OnDismissListener() {
-//            @Override
-//            public void onDismiss(SVProgressHUD hud) {
-////                if (getCurrentPersenter() != null) {
-////                    getCurrentPersenter().unsubcrib();
-////                }
-//            }
-//        });
     }
 
 
@@ -126,14 +108,6 @@ public abstract class BaseActivity extends ToolBarActivity implements OnActivity
      * @param title
      */
     public void showLoadingDialog(String title) {
-//        if (null != this && !this.isFinishing()) {
-//            if (!TextUtils.isEmpty(title)) {
-//                abLoadingDialog.setTitle(title);
-//            } else {
-//                abLoadingDialog.setTitle(getString(R.string.loding_dialog));
-//            }
-//            abLoadingDialog.show();
-//        }
         _loadingDialog.showWithStatus(title, SVProgressHUD.SVProgressHUDMaskType.None);
     }
 
@@ -216,7 +190,6 @@ public abstract class BaseActivity extends ToolBarActivity implements OnActivity
     }
 
 
-
     /**
      * 隐藏LoadingDiog
      */
@@ -275,16 +248,6 @@ public abstract class BaseActivity extends ToolBarActivity implements OnActivity
             if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(BaseActivity.this, new String[]{permission}, id);
                 return;
-//                if (ActivityCompat.shouldShowRequestPermissionRationale(this,permission)) {
-//                    showMessageOKCancel(permissionIntroduce, new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            ActivityCompat.requestPermissions(BaseActivity.this, new String[]{permission}, id);
-//                        }
-//                    });
-//                }else{
-
-//                }
             } else {
                 allowableRunnable.run();
             }

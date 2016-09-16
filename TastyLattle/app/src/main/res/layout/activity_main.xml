@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.desperado.customerlib.view.autolayout.AutoRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,8 +11,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.desperado.tastylattle.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
-</RelativeLayout>
+    <com.desperado.customerlib.view.button.CarouseButton
+        android:id="@+id/btn_confirm_pay_commit"
+        android:layout_width="@dimen/activity_button_width"
+        android:layout_height="@dimen/activity_button_height"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20px"
+        android:layout_marginTop="50px"
+        android:gravity="center_horizontal"
+        android:text="确认支付"
+        android:textColor="@color/white"
+        tl:normalSolid="@color/common_item_text_blue_normal"
+        tl:pressedSolid="@color/btn_blue_pressed"
+        tl:roundButtonRadius="10px"/>
+</com.desperado.customerlib.view.autolayout.AutoRelativeLayout>

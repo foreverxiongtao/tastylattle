@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.desperado.customerlib.view.autolayout.AutoRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_loadding_activity_state"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <com.desperado.customerlib.view.autolayout.AutoLinearLayout
+        android:id="@+id/ll_loadding_activity_state_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_loadding_activity_state_loading_icon"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:src="@drawable/activity_state_view_loading_anim" />
+
+        <TextView
+            android:id="@+id/tv_loadding_activity_state_loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:text="加载中..."
+            android:textColor="@color/gray"
+            android:textSize="35px" />
+    </com.desperado.customerlib.view.autolayout.AutoLinearLayout>
+
+    <com.desperado.customerlib.view.autolayout.AutoLinearLayout
+        android:id="@+id/ll_loadding_activity_state_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_loadding_activity_state_nodata_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mzw_neterror_iamge"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_loadding_activity_state_nodata_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+            android:text="没有数据"
+            android:textColor="@color/common_item_text_blue_normal"
+            android:textSize="35px" />
+    </com.desperado.customerlib.view.autolayout.AutoLinearLayout>
+
+    <com.desperado.customerlib.view.autolayout.AutoLinearLayout
+        android:id="@+id/ll_loadding_activity_state_network_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_loadding_activity_state_network_error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/mzw_neterror_iamge" />
+
+        <TextView
+            android:id="@+id/tv_loadding_activity_state_network_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+            android:gravity="center"
+            android:text="网络异常,点击按钮重试"
+            android:textColor="@color/common_item_text_blue_normal"
+            android:textSize="35px" />
+
+        <Button
+            android:id="@+id/btn_loadding_activity_state_network_error_retry"
+            android:layout_width="260px"
+            android:layout_height="80px"
+            android:layout_marginTop="20px"
+            android:background="@drawable/btn_bg_yello"
+            android:text="重试"
+            android:textColor="@color/white" />
+    </com.desperado.customerlib.view.autolayout.AutoLinearLayout>
+
+</com.desperado.customerlib.view.autolayout.AutoRelativeLayout>

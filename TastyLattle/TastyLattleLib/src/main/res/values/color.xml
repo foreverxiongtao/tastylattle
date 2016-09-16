@@ -2,4 +2,9 @@
 <resources>
     <color name="white">#ffffff</color>
     <color name="text_dark_gary">#424644</color>
+    <color name="gray">#b5b5b6</color>
+    <color name="common_item_text_blue_normal">#00b0e5</color>
+    <color name="common_item_text_blue_deep">#00aeeb</color>
+    <color name="light_title_grey">#DEDEDE</color>
+    <color name="btn_blue_pressed">#0091C7</color>
 </resources>
