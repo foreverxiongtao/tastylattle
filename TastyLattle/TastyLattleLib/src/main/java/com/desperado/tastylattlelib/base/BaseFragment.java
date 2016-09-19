@@ -20,8 +20,8 @@ import com.desperado.tastylattlelib.mvp.presenter.BasePresenter;
 import com.desperado.tastylattlelib.utils.AbViewUtil;
 import com.jaeger.library.StatusBarUtil;
 
-import me.yokeyword.fragmentation.SupportFragment;
 import me.yokeyword.fragmentation.anim.DefaultNoAnimator;
+import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 
 /*
  *
@@ -38,7 +38,7 @@ import me.yokeyword.fragmentation.anim.DefaultNoAnimator;
  *
  * 修订日期 :
  */
-public abstract class BaseFragment extends SupportFragment {
+public abstract class BaseFragment extends SwipeBackFragment {
     /**
      * 当前的fragment的基类布局
      **/
@@ -136,7 +136,7 @@ public abstract class BaseFragment extends SupportFragment {
         setEventListener();
         setStatusBar(provideStatusColor());
         _mActivity.setFragmentAnimator(new DefaultNoAnimator());/**设置fragment切换的动画**/
-        return mFragmentView;
+        return  attachToSwipeBack(mFragmentView);
     }
 
     /**
