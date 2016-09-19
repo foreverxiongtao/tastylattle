@@ -19,9 +19,5 @@ import com.desperado.tastylattlelib.mvp.view.BaseView;
  * 修订日期 :
  */
 public interface MainView extends BaseView {
-    void refresh();
-
-    void loadMore();
-
     void updateData(WeatherInfo _weatherInfo);
 }

@@ -96,6 +96,7 @@ public class ToolBarActivity extends SupportActivity {
         ll_title_bar_left_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pop();
                 finish();
             }
         });

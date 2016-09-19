@@ -1,345 +1,553 @@
 package com.desperado.tastylattlelib.base;
 
-import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bigkoo.svprogresshud.SVProgressHUD;
 import com.desperado.customerlib.view.autolayout.AutoRelativeLayout;
 import com.desperado.tastylattlelib.R;
-import com.desperado.tastylattlelib.listener.OnActivitySelectListenner;
+import com.desperado.tastylattlelib.config.LocalConstant;
 import com.desperado.tastylattlelib.mvp.presenter.BasePresenter;
+import com.desperado.tastylattlelib.utils.AbViewUtil;
+import com.jaeger.library.StatusBarUtil;
 
 import me.yokeyword.fragmentation.SupportFragment;
 
-
+/*
+ *
+ *
+ * 版 权 :@Copyright 北京优多鲜道科技有限公司版权所有
+ *
+ * 作 者 :desperado
+ *
+ * 版 本 :1.0
+ *
+ * 创建日期 :2016/9/19  14:06
+ *
+ * 描 述 :fragment基类设计
+ *
+ * 修订日期 :
+ */
 public abstract class BaseFragment extends SupportFragment {
     /**
-     * Fragment title
-     */
-    public String fragmentTitle;
-    /**
-     * 是否可见状态
-     */
-    private boolean isVisible;
-    /**
-     * 标志位，View已经初始化完成。
-     */
-    public boolean isPrepared;
-    /**
-     * 是否第一次加载
-     */
-    public boolean isFirstLoad = true;
-    /**
-     * 用户在快速切换时，会取消当前加载数据的操作
-     */
-    protected boolean hasCancel;
+     * 当前的fragment的基类布局
+     **/
     private View mFragmentView;
-    protected long startTime;
-    private long endTime;
     /**
-     * 是否已被加载过一次，第二次就不再去请求数据了
+     * 左边返回布局
      */
-    protected boolean mHasLoadedOnce;
-
-    /**
-     * 判断是否上拉下拉加载的状态    来自网络下载加载:TYPE_IS_FROM_NET,上拉加载:TYPE_IS_FROM_PULLUP
+    private LinearLayout ll_title_bar_left_click;
+    /***
+     * activity的状态视图
+     ***/
+    private View mActivityStateView;
+    /****
+     * 加载容器
      */
-    public int loadingStatus = 0;//
-
-
-    //加载进度
     private LinearLayout ll_loadding_activity_state_loading;
-    private LinearLayout ll_loadding_activity_state_nodata;
-    private TextView tv_loadding_activity_state_nodata_text;
-    private LinearLayout ll_loadding_activity_state_network_error;
-    private TextView tv_loadding_activity_state_network_error_text;
-    private Button btn_loadding_activity_state_network_error_retry;
+    /****
+     * 加载图标
+     */
+    private ImageView iv_loadding_activity_state_loading_icon;
+    /****
+     * 加载文字描述
+     */
     private TextView tv_loadding_activity_state_loading_text;
-    private View loading_activity_state;
-    private SVProgressHUD _loadingDialog;
+    /***
+     * 没有数据容器
+     */
+    private LinearLayout ll_loadding_activity_state_nodata;
+    /***
+     * 没有数据图片
+     */
+    private ImageView iv_loadding_activity_state_nodata_icon;
+    /***
+     * 没有数据文本描述
+     */
+    private TextView tv_loadding_activity_state_nodata_text;
+    /***
+     * 无网络图片容器
+     */
+    private LinearLayout ll_loadding_activity_state_network_error;
+    /***
+     * 无网络图片
+     */
+    private ImageView iv_loadding_activity_state_network_error_icon;
+    /***
+     * 无网络描述文本
+     */
+    private TextView tv_loadding_activity_state_network_error_text;
+    /***
+     * 重试按钮
+     */
+    private Button btn_loadding_activity_state_network_error_retry;
+    /***
+     * 标题栏容器
+     */
+    private RelativeLayout rl_title_bar;
+    /***
+     * 标题左边图标
+     */
+    private ImageView iv_title_bar_left_icon;
+    /***
+     * 标题左边文本
+     */
+    private TextView tv_title_bar_left_text;
+    /***
+     * 标题中间的标题名称
+     */
+    private TextView tv_title_bar_center_title;
+    /***
+     * 标题右边点击View
+     */
+    private LinearLayout ll_title_bar_right_click;
+    /***
+     * 标题右边图标
+     */
+    private ImageView iv_title_bar_right_icon;
+    /***
+     * 标题右边文本
+     */
+    private TextView tv_title_bar_right_text;
+    /***
+     * 中间标题的图片
+     */
+    private ImageView iv_title_bar_center_title;
 
-    protected abstract BasePresenter getCurrentPersenter(); //获取当前的业务处理类
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 若 viewpager 不设置 setOffscreenPageLimit 或设置数量不够
-        // 销毁的Fragment onCreateView 每次都会执行(但实体类没有从内存销毁)
-        // 导致initData反复执行,所以这里注释掉
-        // isFirstLoad = true;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mFragmentView == null) {
-            initLoadingDialog();
-            mFragmentView = initViews(inflater, container, savedInstanceState);
-            isPrepared = true;
-            hasCancel = false;
-            lazyLoad();
+            mFragmentView = initialInteralView(initCustomerView(inflater, container, savedInstanceState));
         }
+        setTitleBar();
+        findViewById(mFragmentView);
+        setEventListener();
+        initData();
+        setStatusBar(provideStatusColor());
         return mFragmentView;
     }
 
-
-    public View onCreateView(int layoutResID, LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        RelativeLayout linear = new RelativeLayout(getActivity());
-
-        View view = inflater.inflate(layoutResID, container, false);
-        linear.addView(view);
-
-        //加载进度view
-        AutoRelativeLayout.LayoutParams loading_activity_state_params = new AutoRelativeLayout.LayoutParams(AutoRelativeLayout.LayoutParams.MATCH_PARENT, AutoRelativeLayout.LayoutParams.MATCH_PARENT);
-        loading_activity_state_params.addRule(AutoRelativeLayout.CENTER_IN_PARENT);
-        loading_activity_state = inflater.inflate(R.layout.loading_activity_state, container, false);
-        findTitleViewLoaddingActivityStateById(loading_activity_state);
-        linear.addView(loading_activity_state, loading_activity_state_params);
+    /***
+     * 初始化fragment的内部视图
+     *
+     * @param _customerView
+     * @return
+     */
+    private View initialInteralView(View _customerView) {
+        RelativeLayout linear = new RelativeLayout(_mActivity);
+        View title = LayoutInflater.from(_mActivity).inflate(R.layout.toolbar, null);
+        title.setId(R.id.id_app_title);
+        linear.addView(title, 0);
+        AutoRelativeLayout.LayoutParams params = new AutoRelativeLayout.LayoutParams(AutoRelativeLayout.LayoutParams.MATCH_PARENT, AutoRelativeLayout.LayoutParams.MATCH_PARENT);
+        params.addRule(AutoRelativeLayout.BELOW, title.getId());
+        linear.addView(_customerView, params);
+        /***加载进度view***/
+        AutoRelativeLayout.LayoutParams activityStateView_params = new AutoRelativeLayout.LayoutParams(AutoRelativeLayout.LayoutParams.MATCH_PARENT, AutoRelativeLayout.LayoutParams.MATCH_PARENT);
+        activityStateView_params.addRule(AutoRelativeLayout.CENTER_IN_PARENT);
+        mActivityStateView = LayoutInflater.from(_mActivity).inflate(R.layout.loading_activity_state, null);
+        findLoadingStateViewById();
+        linear.addView(mActivityStateView, activityStateView_params);
+        findTitleViewById(title);
+        setTitleRightViewShow(false);
+        /**默认设置标题栏为白色**/
+        setTitleBarBg(R.color.white);
+        /**设置系统栏样式和颜色*/
+        /***后退键***/
+        ll_title_bar_left_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pop();
+            }
+        });
         return linear;
     }
 
-    /**
-     * 显示LoadingDiog
+    /***
+     * 初始化activity的状态布局
+     */
+    private void findLoadingStateViewById() {
+        //加载数据
+        ll_loadding_activity_state_loading = (LinearLayout) mActivityStateView.findViewById(R.id.ll_loadding_activity_state_loading);
+        iv_loadding_activity_state_loading_icon = (ImageView) mActivityStateView.findViewById(R.id.iv_loadding_activity_state_loading_icon);
+        tv_loadding_activity_state_loading_text = (TextView) mActivityStateView.findViewById(R.id.tv_loadding_activity_state_loading_text);
+        //没有数据
+        ll_loadding_activity_state_nodata = (LinearLayout) mActivityStateView.findViewById(R.id.ll_loadding_activity_state_nodata);
+        iv_loadding_activity_state_nodata_icon = (ImageView) mActivityStateView.findViewById(R.id.iv_loadding_activity_state_nodata_icon);
+        tv_loadding_activity_state_nodata_text = (TextView) mActivityStateView.findViewById(R.id.tv_loadding_activity_state_nodata_text);
+        //网络异常
+        ll_loadding_activity_state_network_error = (LinearLayout) mActivityStateView.findViewById(R.id.ll_loadding_activity_state_network_error);
+        iv_loadding_activity_state_network_error_icon = (ImageView) mActivityStateView.findViewById(R.id.iv_loadding_activity_state_network_error_icon);
+        tv_loadding_activity_state_network_error_text = (TextView) mActivityStateView.findViewById(R.id.tv_loadding_activity_state_network_error_text);
+        btn_loadding_activity_state_network_error_retry = (Button) mActivityStateView.findViewById(R.id.btn_loadding_activity_state_network_error_retry);
+        mActivityStateView.setVisibility(View.GONE);
+    }
+
+
+    /***
+     * 初始化标题栏
      *
      * @param title
      */
-    public void showLoadingDialog(String title) {
-        if (mListener != null)
-            mListener.showLoginDialog(title);
+    private void findTitleViewById(View title) {
+//        toolbar = (Toolbar) title.findViewById(R.id.toolbar);
+        rl_title_bar = (RelativeLayout) title.findViewById(R.id.rl_title_bar);
+        //标题左边点击View
+        ll_title_bar_left_click = (LinearLayout) title.findViewById(R.id.ll_title_bar_left_click);
+        //标题左边图标
+        iv_title_bar_left_icon = (ImageView) title.findViewById(R.id.iv_title_bar_left_icon);
+        //标题左边文本
+        tv_title_bar_left_text = (TextView) title.findViewById(R.id.tv_title_bar_left_text);
+        //标题中间的标题名称
+        tv_title_bar_center_title = (TextView) title.findViewById(R.id.tv_title_bar_center_title);
+        //标题右边点击View
+        ll_title_bar_right_click = (LinearLayout) title.findViewById(R.id.ll_title_bar_right_click);
+        //标题右边图标
+        iv_title_bar_right_icon = (ImageView) title.findViewById(R.id.iv_title_bar_right_icon);
+        //标题右边文本
+        tv_title_bar_right_text = (TextView) title.findViewById(R.id.tv_title_bar_right_text);
+        //中间标题的图片
+        iv_title_bar_center_title = (ImageView) title.findViewById(R.id.iv_title_bar_center_title);
     }
 
-    /**
-     * 隐藏LoadingDiog
-     */
-    public void dismissLoadingDialog() {
-        if (mListener != null)
-            mListener.dismissloading();
-    }
 
     /**
-     * 初始化正在加载进度条
-     */
-    public void initLoadingDialog() {
-
-    }
-
-    /**
-     * 一般提示消息
+     * 设置标题栏背景颜色
      *
-     * @param msg
+     * @param color
      */
-    public void showInfoMsg(String msg) {
-        if (mListener != null)
-            mListener.showInfoMessage(msg);
+    public void setTitleBarBg(int color) {
+        rl_title_bar.setBackgroundResource(color);
     }
 
+
     /**
-     * 成功提示消息
+     * 设置标题栏左边view背景
      *
-     * @param msg
+     * @param resid 资源文件id
      */
-    public void showSuccessMsg(String msg) {
-        if (mListener != null)
-            mListener.showSuccessMessage(msg);
+    public void setTitleLeftViewBg(int resid) {
+        ll_title_bar_left_click.setBackgroundResource(resid);
     }
 
     /**
-     * 错误提示消息
+     * 设置标题栏左边图标
      *
-     * @param msg
+     * @param resid 资源文件id
      */
-    public void showErrMsg(String msg) {
-        if (mListener != null)
-            mListener.showErrorMessageg(msg);
-    }
-
-
-    private void findTitleViewLoaddingActivityStateById(View view) {
-        ll_loadding_activity_state_loading = (LinearLayout) view.findViewById(R.id.ll_loadding_activity_state_loading);
-        tv_loadding_activity_state_loading_text = (TextView) view.findViewById(R.id.tv_loadding_activity_state_loading_text);
-        ll_loadding_activity_state_nodata = (LinearLayout) view.findViewById(R.id.ll_loadding_activity_state_nodata);
-        tv_loadding_activity_state_nodata_text = (TextView) view.findViewById(R.id.tv_loadding_activity_state_nodata_text);
-        ll_loadding_activity_state_network_error = (LinearLayout) view.findViewById(R.id.ll_loadding_activity_state_network_error);
-        tv_loadding_activity_state_network_error_text = (TextView) view.findViewById(R.id.tv_loadding_activity_state_network_error_text);
-        btn_loadding_activity_state_network_error_retry = (Button) view.findViewById(R.id.btn_loadding_activity_state_network_error_retry);
-        view.setVisibility(View.GONE);
+    public void setTitleLeftIcon(int resid) {
+        iv_title_bar_left_icon.setBackgroundResource(resid);
     }
 
     /**
-     * 启动加载
+     * 设置标题栏左边图标
      *
-     * @param loadingText 加载文本
+     * @param resid  资源文件id
+     * @param width  宽
+     * @param height 高
      */
-    public void startLoading(String loadingText) {
-        loading_activity_state.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_loading.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_nodata.setVisibility(View.GONE);
-        ll_loadding_activity_state_network_error.setVisibility(View.GONE);
-        tv_loadding_activity_state_loading_text.setText(loadingText);
+    public void setTitleLeftIcon(int resid, int width, int height) {
+        iv_title_bar_left_icon.setBackgroundResource(resid);
+        AbViewUtil.setViewWH(iv_title_bar_left_icon, width, height);
     }
 
     /**
-     * 启动加载
-     */
-    public void startLoading() {
-        loading_activity_state.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_loading.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_nodata.setVisibility(View.GONE);
-        ll_loadding_activity_state_network_error.setVisibility(View.GONE);
-        tv_loadding_activity_state_loading_text.setText("正在加载...");
-    }
-
-    /**
-     * 停止加载
-     */
-    public void stopLoading() {
-        loading_activity_state.setVisibility(View.GONE);
-        ll_loadding_activity_state_loading.setVisibility(View.GONE);
-        ll_loadding_activity_state_nodata.setVisibility(View.GONE);
-        ll_loadding_activity_state_network_error.setVisibility(View.GONE);
-    }
-
-    /**
-     * 设置加载无数据
+     * 设置标题栏左边text
      *
-     * @param noDataText 加载无数据文本
+     * @param text
      */
-    public void setLoadingNoData(String noDataText) {
-        loading_activity_state.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_loading.setVisibility(View.GONE);
-        ll_loadding_activity_state_nodata.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_network_error.setVisibility(View.GONE);
-        tv_loadding_activity_state_nodata_text.setText(noDataText);
+    public void setTitleLeftText(String text) {
+        tv_title_bar_left_text.setText(text);
     }
 
     /**
-     * 设置加载异常
+     * 设置标题栏左边text颜色
      *
-     * @param netErrorText 加载异常文本
+     * @param color
      */
-    public void setLoadingNetError(String netErrorText) {
-        loading_activity_state.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_loading.setVisibility(View.GONE);
-        ll_loadding_activity_state_nodata.setVisibility(View.GONE);
-        ll_loadding_activity_state_network_error.setVisibility(View.VISIBLE);
-        tv_loadding_activity_state_network_error_text.setText(netErrorText);
-        btn_loadding_activity_state_network_error_retry.setText("重试");
+    public void setTitleLeftTextColor(int color) {
+        tv_title_bar_left_text.setTextColor(Color.parseColor(getString(color)));
     }
 
     /**
-     * 设置加载异常
+     * 设置标题栏名称
+     *
+     * @param title 标题名称
      */
-    public void setLoadingNetError() {
-        loading_activity_state.setVisibility(View.VISIBLE);
-        ll_loadding_activity_state_loading.setVisibility(View.GONE);
-        ll_loadding_activity_state_nodata.setVisibility(View.GONE);
-        ll_loadding_activity_state_network_error.setVisibility(View.VISIBLE);
-        tv_loadding_activity_state_network_error_text.setText("网络异常,点击按钮重试");
-        btn_loadding_activity_state_network_error_retry.setText("重试");
+    public void setTitle(String title) {
+        tv_title_bar_center_title.setText(title);
     }
 
     /**
-     * 重新加载按钮
+     * 设置标题栏名称
+     *
+     * @param title 标题名称
+     */
+    public void setTitle(int title) {
+        tv_title_bar_center_title.setText(getString(title));
+    }
+
+    /**
+     * 设置标题栏名称颜色
+     *
+     * @param color
+     */
+    public void setTitleColor(int color) {
+        tv_title_bar_center_title.setTextColor(Color.parseColor(getString(color)));
+    }
+
+    /**
+     * 设置标题栏右边view背景
+     *
+     * @param resid 资源文件id
+     */
+    public void setTitleRightViewBg(int resid) {
+        ll_title_bar_right_click.setBackgroundResource(resid);
+    }
+
+    /**
+     * 设置标题栏右边图标
+     *
+     * @param resid 资源文件id
+     */
+    public void setTitleRightIcon(int resid) {
+        iv_title_bar_right_icon.setBackgroundResource(resid);
+    }
+
+    /**
+     * 设置标题栏右边图标
+     *
+     * @param resid  资源文件id
+     * @param width  宽
+     * @param height 高
+     */
+    public void setTitleRightIcon(int resid, int width, int height) {
+        iv_title_bar_right_icon.setBackgroundResource(resid);
+        AbViewUtil.setViewWH(iv_title_bar_left_icon, width, height);
+    }
+
+    /**
+     * 设置标题栏右边text
+     *
+     * @param text
+     */
+    public void setTitleRightText(String text) {
+        if (ll_title_bar_right_click.getVisibility() == View.GONE || ll_title_bar_right_click.getVisibility() == View.INVISIBLE) {
+            ll_title_bar_right_click.setVisibility(View.VISIBLE);
+        }
+        tv_title_bar_right_text.setText(text);
+    }
+
+    /**
+     * 设置标题栏右边text颜色
+     *
+     * @param color
+     */
+    public void setTitleRightTextColor(int color) {
+        tv_title_bar_right_text.setTextColor(Color.parseColor(getString(color)));
+    }
+
+    /**
+     * 是否隐藏或者显示标题栏左边view
+     *
+     * @param boo true 显示  false 隐藏
+     */
+    public void setTitleLeftViewShow(boolean boo) {
+        if (boo) {
+            ll_title_bar_left_click.setVisibility(View.VISIBLE);
+        } else {
+            ll_title_bar_left_click.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * 是否隐藏或者显示标题栏左边文本
+     *
+     * @param boo true 显示  false 隐藏
+     */
+    public void setTitleLeftTextShow(boolean boo) {
+        if (boo) {
+            tv_title_bar_left_text.setVisibility(View.VISIBLE);
+        } else {
+            tv_title_bar_left_text.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 是否隐藏或者显示标题栏右边view
+     *
+     * @param boo true 显示  false 隐藏
+     */
+    public void setTitleRightViewShow(boolean boo) {
+        if (boo) {
+            ll_title_bar_right_click.setVisibility(View.VISIBLE);
+        } else {
+            ll_title_bar_right_click.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    /**
+     * 是否隐藏或者显示标题栏右边图标
+     *
+     * @param boo true 显示  false 隐藏
+     */
+    public void setTitleRightIconShow(boolean boo) {
+        if (boo) {
+            iv_title_bar_right_icon.setVisibility(View.VISIBLE);
+        } else {
+            iv_title_bar_right_icon.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 是否隐藏或者显示标题栏右边文本
+     *
+     * @param boo true 显示  false 隐藏
+     */
+    public void setTitleRightTextShow(boolean boo) {
+        if (boo) {
+            tv_title_bar_right_text.setVisibility(View.VISIBLE);
+        } else {
+            tv_title_bar_right_text.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 标题栏左边view事件
      *
      * @return
      */
-    public Button retryButton() {
+    public LinearLayout getTitleLeftClick() {
+        return ll_title_bar_left_click;
+    }
+
+    /**
+     * 标题栏右边view事件
+     *
+     * @return
+     */
+    public LinearLayout getTitleRightClick() {
+        return ll_title_bar_right_click;
+    }
+
+
+    /**
+     * ACTIVITY_STATE_LOADING 正在加载状态
+     * ACTIVITY_STATE_NODATA 没有数据状态
+     * ACTIVITY_STATE_NETWORK_ERROR 网络异常状态
+     *
+     * @param activityState 状态
+     * @param text          没有数据显示文案
+     */
+    public void setActivityLoadingState(int activityState, String text) {
+        mActivityStateView.setVisibility(View.VISIBLE);
+        if (null != mActivityStateView) {
+            if (activityState == LocalConstant.ACTIVITY_STATE_LOADING) {
+                if (ll_loadding_activity_state_network_error.getVisibility() == View.VISIBLE) {
+                    ll_loadding_activity_state_network_error.setVisibility(View.GONE);
+                }
+                ll_loadding_activity_state_loading.setVisibility(View.VISIBLE);
+                if (!TextUtils.isEmpty(text)) {
+                    tv_loadding_activity_state_loading_text.setText(text);
+                }
+            } else if (activityState == LocalConstant.ACTIVITY_STATE_NODATA) {
+                ll_loadding_activity_state_loading.setVisibility(View.GONE);
+                ll_loadding_activity_state_nodata.setVisibility(View.VISIBLE);
+                if (!TextUtils.isEmpty(text)) {
+                    tv_loadding_activity_state_nodata_text.setText(text);
+                }
+            } else if (activityState == LocalConstant.ACTIVITY_STATE_NETWORK_ERROR) {
+                ll_loadding_activity_state_loading.setVisibility(View.GONE);
+                ll_loadding_activity_state_network_error.setVisibility(View.VISIBLE);
+                if (!TextUtils.isEmpty(text)) {
+                    tv_loadding_activity_state_network_error_text.setText(text);
+                }
+            } else {
+                ll_loadding_activity_state_loading.setVisibility(View.GONE);
+                mActivityStateView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public View getActivityStateView() {
         return btn_loadding_activity_state_network_error_retry;
     }
 
-    public int getLoadingStatus() {
-        return loadingStatus;
-    }
-
-    public void setLoadingStatus(int loadingStatus) {
-        this.loadingStatus = loadingStatus;
-    }
-
-    /**
-     * 如果是与ViewPager一起使用，调用的是setUserVisibleHint
-     *
-     * @param isVisibleToUser 是否显示出来了
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (getUserVisibleHint()) {
-            isVisible = true;
-            onVisible();
-        } else {
-            isVisible = false;
-            onInvisible();
-        }
-    }
-
-    /**
-     * 如果是通过FragmentTransaction的show和hide的方法来控制显示，调用的是onHiddenChanged.
-     * 若是初始就show的Fragment 为了触发该事件 需要先hide再show
-     *
-     * @param hidden
-     */
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            isVisible = true;
-            onVisible();
-        } else {
-            isVisible = false;
-            onInvisible();
-        }
-    }
-
-    OnActivitySelectListenner mListener;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    protected void setStatusBar(int _color) {
         try {
-            mListener = (OnActivitySelectListenner) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implementOnArticleSelectedListener");
+            StatusBarUtil.setColor(_mActivity, _mActivity.getResources().getColor(provideStatusColor()), 0);
+        } catch (Exception _e) {
+            StatusBarUtil.setColor(_mActivity, _mActivity.getResources().getColor(R.color.light_title_grey), 0);
         }
     }
-
-    protected void onVisible() {
-        startTime = System.currentTimeMillis();
-        if (!hasCancel) {
-            lazyLoad();
-        }
-        hasCancel = false; //重置标示位
-    }
-
-    protected void onInvisible() {
-
-    }
-
-    /**
-     * 要实现延迟加载Fragment内容,需要在 onCreateView
-     * isPrepared = true;
-     */
-    protected void lazyLoad() {
-        if (!isPrepared || !isVisible || !isFirstLoad) {
-            return;
-        }
-        isFirstLoad = false;
-        initData();
-    }
-
-    protected abstract View initViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
-
-    protected abstract void initData();
-
-    public abstract void RefreshFragment();
 
     @Override
     public void onDestroyView() {
+        BasePresenter presnter = getCurrentPersenter();
+        /**取消当前的业务处理请求*/
+        if (presnter != null) {
+            presnter.unsubcrib();
+        }
         super.onDestroyView();
         ViewGroup parent = (ViewGroup) mFragmentView.getParent();
         if (parent != null) {
             parent.removeView(mFragmentView);
         }
     }
+
+    /**
+     * 初始化用户自定义布局
+     *
+     * @param _inflater
+     * @param _container
+     * @param _savedInstanceState
+     */
+    protected abstract View initCustomerView(LayoutInflater _inflater, ViewGroup _container, Bundle _savedInstanceState);
+
+    /**
+     * 给视图设置事件监听
+     */
+    protected abstract void setEventListener();
+
+    /***
+     * 寻找子控件
+     *
+     * @param _root
+     */
+    protected abstract void findViewById(View _root);
+
+    /**
+     * 设置标题栏
+     **/
+    protected abstract void setTitleBar();
+
+    /***
+     * 设置对应的数据
+     */
+    protected abstract void initData();
+
+    /***
+     * 获取当前的fragment的业务处理类
+     *
+     * @return
+     */
+    protected abstract BasePresenter getCurrentPersenter();
+
+    /***
+     * 设置系统栏的样式
+     *
+     * @return
+     */
+    protected abstract int provideStatusColor();
+
 }
