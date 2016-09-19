@@ -33,6 +33,11 @@ public class MainFragment extends BaseFragment implements MainView, View.OnClick
     }
 
     @Override
+    public boolean enableSwipeBack() {
+        return false;
+    }
+
+    @Override
     protected View initCustomerView(LayoutInflater _inflater, ViewGroup _container, Bundle _savedInstanceState) {
         View root = _inflater.inflate(R.layout.fragment_main, null);
         return root;

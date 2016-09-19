@@ -2,8 +2,8 @@ package com.desperado.tastylattle.ui.activity;
 
 import android.os.Bundle;
 
-import com.desperado.tastylattle.ui.fragment.MainFragment;
 import com.desperado.tastylattle.R;
+import com.desperado.tastylattle.ui.fragment.MainFragment;
 
 import me.yokeyword.fragmentation.SupportActivity;
 
@@ -22,7 +22,7 @@ public class MainActivity extends SupportActivity {
 //        init();
     }
 
-//    @Override
+    //    @Override
 //    public int provideStatusColor() {
 //        return R.color.common_botton_bar_blue;
 //    }

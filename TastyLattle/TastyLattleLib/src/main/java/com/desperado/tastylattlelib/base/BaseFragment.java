@@ -136,7 +136,11 @@ public abstract class BaseFragment extends SwipeBackFragment {
         setEventListener();
         setStatusBar(provideStatusColor());
         _mActivity.setFragmentAnimator(new DefaultNoAnimator());/**设置fragment切换的动画**/
-        return  attachToSwipeBack(mFragmentView);
+        if (enableSwipeBack()) {
+            return attachToSwipeBack(mFragmentView);
+        } else {
+            return mFragmentView;
+        }
     }
 
     /**
@@ -561,5 +565,13 @@ public abstract class BaseFragment extends SwipeBackFragment {
      * @return
      */
     protected abstract int provideStatusColor();
+
+
+    /***
+     * 是否允许滑动后退
+     *
+     * @return
+     */
+    public abstract boolean enableSwipeBack();
 
 }

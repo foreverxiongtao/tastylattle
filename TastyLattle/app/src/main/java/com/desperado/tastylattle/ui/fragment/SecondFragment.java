@@ -58,6 +58,11 @@ public class SecondFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
+    public boolean enableSwipeBack() {
+        return true;
+    }
+
+    @Override
     public void onClick(View v) {
         AbToastUtil.showToast(_mActivity, "第二个fragment");
     }
