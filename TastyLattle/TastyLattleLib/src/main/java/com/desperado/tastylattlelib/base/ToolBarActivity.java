@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.desperado.customerlib.view.autolayout.AutoRelativeLayout;
 import com.desperado.tastylattlelib.R;
+import com.desperado.tastylattlelib.config.LocalConstant;
 import com.desperado.tastylattlelib.utils.AbViewUtil;
 import com.jaeger.library.StatusBarUtil;
 
@@ -37,34 +38,88 @@ import me.yokeyword.fragmentation.SupportActivity;
  * 修订日期 :
  */
 public class ToolBarActivity extends SupportActivity {
-    protected RelativeLayout rl_title_bar;
-    private LinearLayout ll_title_bar_left_click;//标题左边点击View
-    private ImageView iv_title_bar_left_icon;//标题左边图标
-    private TextView tv_title_bar_left_text;//标题左边文本
-    private TextView tv_title_bar_center_title;//标题中间的标题名称
-    private LinearLayout ll_title_bar_right_click;//标题右边点击View
-    private ImageView iv_title_bar_right_icon;//标题右边图标
-    private TextView tv_title_bar_right_text;//标题右边文本
-    private ImageView iv_title_bar_center_title;//中间标题的图片
-    private View activityStateView;
-    //(1.加载页 2.显示空白页，3.显示网络异常页面4.加载完成)
-    public final static int ACTIVITY_STATE_LOADING = 1;
-    public final static int ACTIVITY_STATE_NODATA = 2;
-    public final static int ACTIVITY_STATE_NETWORK_ERROR = 3;
-    public final static int ACTIVITY_STATE_FINISH_LOADING = 4;
-    //加载数据
+    /**
+     * 左边返回布局
+     */
+    private LinearLayout ll_title_bar_left_click;
+    /****
+     * 加载容器
+     */
     private LinearLayout ll_loadding_activity_state_loading;
+    /****
+     * 加载图标
+     */
     private ImageView iv_loadding_activity_state_loading_icon;
+    /****
+     * 加载文字描述
+     */
     private TextView tv_loadding_activity_state_loading_text;
-    //没有数据
+    /***
+     * 没有数据容器
+     */
     private LinearLayout ll_loadding_activity_state_nodata;
+    /***
+     * 没有数据图片
+     */
     private ImageView iv_loadding_activity_state_nodata_icon;
+    /***
+     * 没有数据文本描述
+     */
     private TextView tv_loadding_activity_state_nodata_text;
-    //网络异常
+    /***
+     * 无网络图片容器
+     */
     private LinearLayout ll_loadding_activity_state_network_error;
+    /***
+     * 无网络图片
+     */
     private ImageView iv_loadding_activity_state_network_error_icon;
+    /***
+     * 无网络描述文本
+     */
     private TextView tv_loadding_activity_state_network_error_text;
-    private Button btn_loadding_activity_state_network_error_retry;//重试
+    /***
+     * 重试按钮
+     */
+    private Button btn_loadding_activity_state_network_error_retry;
+    /***
+     * 标题栏容器
+     */
+    private RelativeLayout rl_title_bar;
+    /***
+     * 标题左边图标
+     */
+    private ImageView iv_title_bar_left_icon;
+    /***
+     * 标题左边文本
+     */
+    private TextView tv_title_bar_left_text;
+    /***
+     * 标题中间的标题名称
+     */
+    private TextView tv_title_bar_center_title;
+    /***
+     * 标题右边点击View
+     */
+    private LinearLayout ll_title_bar_right_click;
+    /***
+     * 标题右边图标
+     */
+    private ImageView iv_title_bar_right_icon;
+    /***
+     * 标题右边文本
+     */
+    private TextView tv_title_bar_right_text;
+    /***
+     * 中间标题的图片
+     */
+    private ImageView iv_title_bar_center_title;
+
+    /***
+     * activity的状态视图
+     ***/
+    protected View activityStateView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +152,7 @@ public class ToolBarActivity extends SupportActivity {
             @Override
             public void onClick(View v) {
                 pop();
-                finish();
+//                finish();
             }
         });
     }
@@ -113,7 +168,7 @@ public class ToolBarActivity extends SupportActivity {
     public void setActivityLoadingState(int activityState, String text) {
         activityStateView.setVisibility(View.VISIBLE);
         if (null != activityStateView) {
-            if (activityState == ACTIVITY_STATE_LOADING) {
+            if (activityState == LocalConstant.ACTIVITY_STATE_LOADING) {
                 if (ll_loadding_activity_state_network_error.getVisibility() == View.VISIBLE) {
                     ll_loadding_activity_state_network_error.setVisibility(View.GONE);
                 }
@@ -121,13 +176,13 @@ public class ToolBarActivity extends SupportActivity {
                 if (!TextUtils.isEmpty(text)) {
                     tv_loadding_activity_state_loading_text.setText(text);
                 }
-            } else if (activityState == ACTIVITY_STATE_NODATA) {
+            } else if (activityState == LocalConstant.ACTIVITY_STATE_NODATA) {
                 ll_loadding_activity_state_loading.setVisibility(View.GONE);
                 ll_loadding_activity_state_nodata.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(text)) {
                     tv_loadding_activity_state_nodata_text.setText(text);
                 }
-            } else if (activityState == ACTIVITY_STATE_NETWORK_ERROR) {
+            } else if (activityState == LocalConstant.ACTIVITY_STATE_NETWORK_ERROR) {
                 ll_loadding_activity_state_loading.setVisibility(View.GONE);
                 ll_loadding_activity_state_network_error.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(text)) {

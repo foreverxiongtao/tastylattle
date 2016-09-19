@@ -27,28 +27,24 @@ public class MainFragment extends BaseFragment implements MainView, View.OnClick
         return mMainPresenter;
     }
 
-    @Override
+
     protected int provideStatusColor() {
         return R.color.common_title_blue;
     }
 
-    @Override
     protected View initCustomerView(LayoutInflater _inflater, ViewGroup _container, Bundle _savedInstanceState) {
         View root = _inflater.inflate(R.layout.fragment_main, null);
         return root;
     }
 
-    @Override
     protected void setEventListener() {
         mBtn_fragment_main_commit.setOnClickListener(this);
     }
 
-    @Override
     protected void findViewById(View _root) {
         mBtn_fragment_main_commit = (Button) _root.findViewById(R.id.btn_fragment_main_commit);
     }
 
-    @Override
     protected void setTitleBar() {
         setTitleBarBg(R.color.common_title_blue);
         setTitleLeftViewBg(R.color.common_title_blue);
@@ -56,7 +52,6 @@ public class MainFragment extends BaseFragment implements MainView, View.OnClick
         setTitle("测试");
     }
 
-    @Override
     protected void initData() {
         mMainPresenter = new MainPresenter();
         mMainPresenter.attachView(this);
