@@ -44,7 +44,7 @@ public class SecondFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected void initData() {
-
+        mTv_fragment_second.setText("aaaaaaaa");
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SecondFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     protected int provideStatusColor() {
-        return 0;
+        return R.color.common_title_blue;
     }
 
     @Override

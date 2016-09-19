@@ -21,6 +21,7 @@ import com.desperado.tastylattlelib.utils.AbViewUtil;
 import com.jaeger.library.StatusBarUtil;
 
 import me.yokeyword.fragmentation.SupportFragment;
+import me.yokeyword.fragmentation.anim.DefaultNoAnimator;
 
 /*
  *
@@ -133,9 +134,20 @@ public abstract class BaseFragment extends SupportFragment {
         setTitleBar();
         findViewById(mFragmentView);
         setEventListener();
-        initData();
         setStatusBar(provideStatusColor());
+        _mActivity.setFragmentAnimator(new DefaultNoAnimator());/**设置fragment切换的动画**/
         return mFragmentView;
+    }
+
+    /**
+     * 比较复杂的Fragment页面会在第一次start时,导致动画卡顿
+     * Fragmentation提供了onEnterAnimationEnd()方法,该方法会在 入栈动画 结束时回调
+     * 所以在onCreateView进行一些简单的View初始化(比如 toolbar设置标题,返回按钮; 显示加载数据的进度条等),
+     * 然后在onEnterAnimationEnd()方法里进行 复杂的耗时的初始化 (比如FragmentPagerAdapter的初始化 加载数据等)
+     */
+    @Override
+    protected void onEnterAnimationEnd(Bundle savedInstanceState) {
+        initData();
     }
 
     /***
